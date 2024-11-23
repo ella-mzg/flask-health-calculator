@@ -1,55 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loan Calculator</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Health Calculator</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .container { max-width: 500px; margin: auto; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; }
-        input[type="number"] { width: 100%; padding: 8px; }
-        button { padding: 10px 20px; background-color: #007BFF; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
-        .result { margin-top: 20px; font-size: 1.1em; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Loan Calculator</h2>
-        <div class="input-group">
-            <label for="loan_amount">Loan Amount ($)</label>
-            <input type="number" id="loan_amount" name="loan_amount" required>
-        </div>
-        <div class="input-group">
-            <label for="duration">Duration (years)</label>
-            <input type="number" id="duration" name="duration" required>
-        </div>
-        <div class="input-group">
-            <label for="interest_rate">Interest Rate (%)</label>
-            <input type="number" id="interest_rate" name="interest_rate" step="0.01" required>
-        </div>
-        <button onclick="calculateLoan()">Calculate</button>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        margin: 20px;
+        color: #343a40;
+      }
 
-        <div class="result">
-            <p>Monthly Payment: $<span id="monthly_payment">0.00</span></p>
-            <p>Total Cost of Loan: $<span id="total_cost">0.00</span></p>
-        </div>
+      .container {
+        max-width: 500px;
+        margin: auto;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #007bff;
+      }
+
+      .input-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      input[type="number"],
+      select {
+        width: 100%;
+        padding: 10px;
+        font-size: 1em;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        font-size: 1em;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      .result {
+        margin-top: 20px;
+        padding: 10px;
+        background: #e9ecef;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 1.1em;
+        text-align: center;
+      }
+
+      .result span {
+        font-weight: bold;
+        color: #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Health Calculator</h2>
+
+      <!-- BMI Calculator -->
+      <h3>BMI Calculator</h3>
+      <div class="input-group">
+        <label for="bmi-height">Height (meters)</label>
+        <input
+          type="number"
+          id="bmi-height"
+          step="0.01"
+          placeholder="e.g., 1.75"
+          required
+        />
+      </div>
+      <div class="input-group">
+        <label for="bmi-weight">Weight (kilograms)</label>
+        <input
+          type="number"
+          id="bmi-weight"
+          step="0.1"
+          placeholder="e.g., 70"
+          required
+        />
+      </div>
+      <button onclick="calculateBMI()">Calculate BMI</button>
+      <div class="result" id="bmi-result" style="display: none">
+        Your BMI: <span id="bmi-value">0.00</span>
+      </div>
+
+      <hr />
+
+      <!-- BMR Calculator -->
+      <h3>BMR Calculator</h3>
+      <div class="input-group">
+        <label for="bmr-height">Height (cm)</label>
+        <input type="number" id="bmr-height" placeholder="e.g., 175" required />
+      </div>
+      <div class="input-group">
+        <label for="bmr-weight">Weight (kg)</label>
+        <input type="number" id="bmr-weight" placeholder="e.g., 70" required />
+      </div>
+      <div class="input-group">
+        <label for="bmr-age">Age</label>
+        <input type="number" id="bmr-age" placeholder="e.g., 25" required />
+      </div>
+      <div class="input-group">
+        <label for="bmr-gender">Gender</label>
+        <select id="bmr-gender" required>
+          <option value="">Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+      <button onclick="calculateBMR()">Calculate BMR</button>
+      <div class="result" id="bmr-result" style="display: none">
+        Your BMR: <span id="bmr-value">0.00</span>
+      </div>
     </div>
 
     <script>
-        function calculateLoan() {
-            const loan_amount = parseFloat(document.getElementById('loan_amount').value);
-            const duration = parseInt(document.getElementById('duration').value);
-            const interest_rate = parseFloat(document.getElementById('interest_rate').value);
+      function calculateBMI() {
+        const height = parseFloat(document.getElementById("bmi-height").value);
+        const weight = parseFloat(document.getElementById("bmi-weight").value);
 
-            $.post('/calculate', { loan_amount, duration, interest_rate }, function(data) {
-                $('#monthly_payment').text(data.monthly_payment.toFixed(2));
-                $('#total_cost').text(data.total_cost.toFixed(2));
-            });
+        if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0) {
+          alert("Please enter valid positive values for height and weight.");
+          return;
         }
+
+        $.post("/bmi", JSON.stringify({ height, weight }), (data) => {
+          $("#bmi-value").text(data.bmi.toFixed(2));
+          $("#bmi-result").show();
+        }).fail(() => {
+          alert("Error calculating BMI. Please try again.");
+        });
+      }
+
+      function calculateBMR() {
+        const height = parseFloat(document.getElementById("bmr-height").value);
+        const weight = parseFloat(document.getElementById("bmr-weight").value);
+        const age = parseInt(document.getElementById("bmr-age").value);
+        const gender = document.getElementById("bmr-gender").value;
+
+        if (
+          isNaN(height) ||
+          isNaN(weight) ||
+          isNaN(age) ||
+          !gender ||
+          height <= 0 ||
+          weight <= 0 ||
+          age <= 0
+        ) {
+          alert("Please enter valid positive values for all fields.");
+          return;
+        }
+
+        $.post(
+          "/bmr",
+          JSON.stringify({ height, weight, age, gender }),
+          (data) => {
+            $("#bmr-value").text(data.bmr.toFixed(2));
+            $("#bmr-result").show();
+          }
+        ).fail(() => {
+          alert("Error calculating BMR. Please try again.");
+        });
+      }
     </script>
-</body>
+  </body>
 </html>

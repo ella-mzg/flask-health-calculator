@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, jsonify
-from utils import calculate_monthly_payment, calculate_total_cost
+from flask import Flask, request, jsonify
+from utils import calculate_bmi, calculate_bmr
 
 app = Flask(__name__)
 
@@ -7,19 +7,51 @@ app = Flask(__name__)
 def home():
     return render_template('home.html')
 
-@app.route('/calculate', methods=['POST'])
-def calculate():
-    loan_amount = float(request.form['loan_amount'])
-    duration_years = int(request.form['duration'])
-    annual_interest_rate = float(request.form['interest_rate'])
+@app.route('/bmi', methods=['POST'])
+def bmi():
+    """
+    Endpoint to calculate BMI.
+    Accepts JSON data with 'height' (in meters) and 'weight' (in kilograms).
+    Returns the calculated BMI.
+    """
+    data = request.json
+    try:
+        height = float(data.get('height'))  # Height in meters
+        weight = float(data.get('weight'))  # Weight in kilograms
+        if height <= 0 or weight <= 0:
+            raise ValueError("Height and weight must be positive numbers.")
+        bmi_value = calculate_bmi(height, weight)
+        return jsonify({"bmi": round(bmi_value, 2)}), 200
+    except (TypeError, ValueError) as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception:
+        return jsonify({"error": "Invalid input or missing fields. Provide 'height' and 'weight' in JSON format."}), 400
 
-    monthly_payment = calculate_monthly_payment(loan_amount, duration_years, annual_interest_rate)
-    total_cost = calculate_total_cost(monthly_payment, duration_years)
+@app.route('/bmr', methods=['POST'])
+def bmr():
+    """
+    Endpoint to calculate BMR.
+    Accepts JSON data with 'height' (in cm), 'weight' (in kg), 'age', and 'gender'.
+    Returns the calculated BMR.
+    """
+    data = request.json
+    try:
+        height = float(data.get('height'))  # Height in cm
+        weight = float(data.get('weight'))  # Weight in kilograms
+        age = int(data.get('age'))  # Age in years
+        gender = data.get('gender').lower()  # Gender ('male' or 'female')
+        if height <= 0 or weight <= 0 or age <= 0:
+            raise ValueError("Height, weight, and age must be positive numbers.")
+        if gender not in ['male', 'female']:
+            raise ValueError("Gender must be 'male' or 'female'.")
+        bmr_value = calculate_bmr(height, weight, age, gender)
+        return jsonify({"bmr": round(bmr_value, 2)}), 200
+    except (TypeError, ValueError) as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception:
+        return jsonify({"error": "Invalid input or missing fields. Provide 'height', 'weight', 'age', and 'gender' in JSON format."}), 400
 
-    return jsonify({
-        'monthly_payment': monthly_payment,
-        'total_cost': total_cost
-    })
-
+# Run the app
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
+

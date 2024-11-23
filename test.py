@@ -1,29 +1,66 @@
 import unittest
-from utils import calculate_monthly_payment, calculate_total_cost
+from utils import calculate_bmi, calculate_bmr
 
-class TestLoanCalculatorUtils(unittest.TestCase):
-    def test_calculate_monthly_payment_with_interest(self):
-        loan_amount = 10000
-        duration_years = 5
-        annual_interest_rate = 5
-        expected_payment = 188.71
-        result = calculate_monthly_payment(loan_amount, duration_years, annual_interest_rate)
-        self.assertAlmostEqual(result, expected_payment, places=2)
+class TestHealthUtils(unittest.TestCase):
+    def test_calculate_bmi_valid(self):
+        """Test BMI calculation with valid inputs."""
+        height = 1.75  
+        weight = 70  
+        expected_bmi = 22.86
+        result = calculate_bmi(height, weight)
+        self.assertAlmostEqual(result, expected_bmi, places=2)
 
-    def test_calculate_monthly_payment_no_interest(self):
-        loan_amount = 10000
-        duration_years = 5
-        annual_interest_rate = 0
-        expected_payment = 166.67
-        result = calculate_monthly_payment(loan_amount, duration_years, annual_interest_rate)
-        self.assertAlmostEqual(result, expected_payment, places=2)
+    def test_calculate_bmi_zero_height(self):
+        """Test BMI calculation with zero height (should raise an error)."""
+        height = 0  
+        weight = 70  
+        with self.assertRaises(ValueError):
+            calculate_bmi(height, weight)
 
-    def test_calculate_total_cost(self):
-        monthly_payment = 188.71
-        duration_years = 5
-        expected_total_cost = 11322.6
-        result = calculate_total_cost(monthly_payment, duration_years)
-        self.assertAlmostEqual(result, expected_total_cost, places=2)
+    def test_calculate_bmi_negative_weight(self):
+        """Test BMI calculation with negative weight (should raise an error)."""
+        height = 1.75  
+        weight = -70  
+        with self.assertRaises(ValueError):
+            calculate_bmi(height, weight)
+
+    def test_calculate_bmr_valid_male(self):
+        """Test BMR calculation for males with valid inputs."""
+        height = 175  
+        weight = 70  
+        age = 25  
+        gender = 'male'
+        expected_bmr = 1705.54
+        result = calculate_bmr(height, weight, age, gender)
+        self.assertAlmostEqual(result, expected_bmr, places=2)
+
+    def test_calculate_bmr_valid_female(self):
+        """Test BMR calculation for females with valid inputs."""
+        height = 160  
+        weight = 60  
+        age = 30  
+        gender = 'female'
+        expected_bmr = 1384.15
+        result = calculate_bmr(height, weight, age, gender)
+        self.assertAlmostEqual(result, expected_bmr, places=2)
+
+    def test_calculate_bmr_invalid_gender(self):
+        """Test BMR calculation with an invalid gender (should raise an error)."""
+        height = 175  
+        weight = 70  
+        age = 25  
+        gender = 'other'
+        with self.assertRaises(ValueError):
+            calculate_bmr(height, weight, age, gender)
+
+    def test_calculate_bmr_negative_values(self):
+        """Test BMR calculation with negative height, weight, or age (should raise an error)."""
+        height = -175  
+        weight = 70  
+        age = 25  
+        gender = 'male'
+        with self.assertRaises(ValueError):
+            calculate_bmr(height, weight, age, gender)
 
 if __name__ == '__main__':
     unittest.main()
