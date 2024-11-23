@@ -151,11 +151,22 @@
           return;
         }
 
-        $.post("/bmi", JSON.stringify({ height, weight }), (data) => {
-          $("#bmi-value").text(data.bmi.toFixed(2));
-          $("#bmi-result").show();
-        }).fail(() => {
-          alert("Error calculating BMI. Please try again.");
+        $.ajax({
+          url: "/bmi",
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ height, weight }),
+          success: function (data) {
+            $("#bmi-value").text(data.bmi.toFixed(2));
+            $("#bmi-result").show();
+          },
+          error: function (xhr) {
+            const error =
+              xhr.responseJSON && xhr.responseJSON.error
+                ? xhr.responseJSON.error
+                : "An unknown error occurred.";
+            alert(`Error calculating BMI: ${error}`);
+          },
         });
       }
 
@@ -178,15 +189,22 @@
           return;
         }
 
-        $.post(
-          "/bmr",
-          JSON.stringify({ height, weight, age, gender }),
-          (data) => {
+        $.ajax({
+          url: "/bmr",
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ height, weight, age, gender }),
+          success: function (data) {
             $("#bmr-value").text(data.bmr.toFixed(2));
             $("#bmr-result").show();
-          }
-        ).fail(() => {
-          alert("Error calculating BMR. Please try again.");
+          },
+          error: function (xhr) {
+            const error =
+              xhr.responseJSON && xhr.responseJSON.error
+                ? xhr.responseJSON.error
+                : "An unknown error occurred.";
+            alert(`Error calculating BMR: ${error}`);
+          },
         });
       }
     </script>
