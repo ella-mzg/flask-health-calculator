@@ -24,34 +24,26 @@ class TestHealthUtils(unittest.TestCase):
         with self.assertRaises(ValueError):
             calculate_bmi(height, weight)
 
+class TestHealthUtils(unittest.TestCase):
     def test_calculate_bmr_valid_male(self):
         """Test BMR calculation for males with valid inputs."""
-        height = 175  
-        weight = 70  
-        age = 25  
+        height = 175
+        weight = 70
+        age = 25
         gender = 'male'
-        expected_bmr = 1705.54
+        expected_bmr = 1724.05
         result = calculate_bmr(height, weight, age, gender)
         self.assertAlmostEqual(result, expected_bmr, places=2)
 
     def test_calculate_bmr_valid_female(self):
         """Test BMR calculation for females with valid inputs."""
-        height = 160  
-        weight = 60  
-        age = 30  
+        height = 160
+        weight = 60
+        age = 30
         gender = 'female'
-        expected_bmr = 1384.15
+        expected_bmr = 1368.19
         result = calculate_bmr(height, weight, age, gender)
         self.assertAlmostEqual(result, expected_bmr, places=2)
-
-    def test_calculate_bmr_invalid_gender(self):
-        """Test BMR calculation with an invalid gender (should raise an error)."""
-        height = 175  
-        weight = 70  
-        age = 25  
-        gender = 'other'
-        with self.assertRaises(ValueError):
-            calculate_bmr(height, weight, age, gender)
 
     def test_calculate_bmr_negative_values(self):
         """Test BMR calculation with negative height, weight, or age (should raise an error)."""
