@@ -53,3 +53,30 @@ This project was created using a template developed by **Ali Mokh**. It is a Pyt
     "bmi": 1705.54
   }
   ```
+
+---
+
+## Running the App
+
+### Access the App Locally
+
+- **Build the Docker Image**:
+  Make sure Docker is installed and running on your system, then run:
+
+  ```bash
+  docker build -t health-calculator .
+  ```
+
+- **Run the Docker Container**:
+  Start the container using:
+
+  ```bash
+  docker run -p 5000:5000 health-calculator
+  ```
+
+- **Access the App**:
+  Open your browser and go to http://localhost:5000
+
+### Access the Deployed App
+
+Open your browser and go to https://health-calculator-brgxgggqg8btfahf.westeurope-01.azurewebsites.net/
