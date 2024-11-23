@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from utils import calculate_bmi, calculate_bmr
 
 app = Flask(__name__)
