@@ -50,7 +50,7 @@ This project was created using a template developed by **Ali Mokh**. It is a Pyt
 - **Response**:
   ```json
   {
-    "bmi": 1705.54
+    "bmi": 1724.05
   }
   ```
 
